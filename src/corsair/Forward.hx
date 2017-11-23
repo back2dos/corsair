@@ -11,7 +11,7 @@ class Forward {
   static var http = new tink.http.clients.NodeClient();
   static var https = new tink.http.clients.SecureNodeClient();
   static public function request(req:IncomingRequest, to:String, redirect) {
-    Promise.lift(req.header.byName(HOST))
+    return Promise.lift(req.header.byName(HOST))
       .next(function (host) {
         var host:String = host;
         var url:tink.Url = to;
@@ -66,6 +66,6 @@ class Forward {
             res.body.idealize(function (_) return Source.EMPTY)
           )
         );        
-      });
+      }).recover(OutgoingResponse.reportError);//TODO: should probably generate 502s here as appropriate
   }
 }
