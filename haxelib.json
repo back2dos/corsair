@@ -1,0 +1,20 @@
+{
+  "name": "corsair",
+  "license": "MIT",
+  "tags": [
+    "cors",
+    "dev",
+    "server"
+  ],
+  "classPath": "src",
+  "contributors": [
+    "back2dos"
+  ],
+  "releasenote": "initial release",
+  "version": "0.0.0",
+  "url": "https://github.com/back2dos/corsair/",
+  "dependencies": {
+    "tink_http": "gh:haxetink/tink_http#pure",
+    "hxnodejs": ""
+  }
+}

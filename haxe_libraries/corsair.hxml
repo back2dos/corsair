@@ -1,0 +1,3 @@
+-cp src
+-lib tink_http
+-lib hxnodejs
