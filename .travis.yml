@@ -12,7 +12,6 @@ install:
   - npm install lix.pm -g
   - lix download
   - haxelib install travix
-  - haxelib run travix install
 
 script:
   - haxelib run travix node
