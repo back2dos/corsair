@@ -14,7 +14,7 @@ class Middleware {
         var to = req.header.url.query.toMap()[paramName].toString();
         return 
           if (req.header.url.path == '/' && to != null)
-            Forward.request(req, to, function (ctx) return 'http://${ctx.self}/?$to=${ctx.target}');
+            Forward.request(req, to, function (ctx) return 'http://${ctx.self}/?$paramName=${ctx.target}');
           else
             handler.process(req);
         }
