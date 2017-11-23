@@ -1,3 +1,2 @@
 -cp src
--lib tink_http
--lib hxnodejs
+-lib tink_http_fetch

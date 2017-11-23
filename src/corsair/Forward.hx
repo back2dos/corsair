@@ -8,8 +8,6 @@ using tink.CoreApi;
 using tink.io.Source;
 
 class Forward {
-  static var http = new tink.http.clients.NodeClient();
-  static var https = new tink.http.clients.SecureNodeClient();
   static public function request(req:IncomingRequest, to:String, redirect) {
     return Promise.lift(req.header.byName(HOST))
       .next(function (host) {
@@ -18,32 +16,22 @@ class Forward {
         if (url.host == null)
           return new Error(BadRequest, 'Missing host in URL "$to"');
 
-        var fields = [for (h in req.header) switch h.name {
-          case (_:String) => 'referer' | 'origin': continue;
-          case HOST: new HeaderField(HOST, url.host.toString());
-          default: h;
-        }];
-
-        return (if (url.scheme == 'http')
-          http
-        else
-          https
-        ).request(
-          new OutgoingRequest(
-            new OutgoingRequestHeader(
-              req.header.method, 
-              to,
-              fields
-            ),
-            switch req.body {
-              case Plain(v): 
-                v.idealize(function (_) return Source.EMPTY);
-              case Parsed(_): 
-                trace('received parsed body oO');
-                '';
-            }
-          )
-        ).next(function (res) 
+        return tink.http.Fetch.fetch(to, {
+          method: req.header.method,
+          headers: [for (h in req.header) switch h.name {
+            case (_:String) => 'referer' | 'origin': continue;
+            case HOST: new HeaderField(HOST, url.host.toString());
+            default: h;
+          }],
+          body: switch req.body {
+            case Plain(v): 
+              v.idealize(function (_) return Source.EMPTY);
+            case Parsed(_): 
+              trace('received parsed body oO');
+              '';
+          },
+          followRedirect: false,
+        }).next(function (res) 
           return new OutgoingResponse(
             new ResponseHeader(
               switch res.header.statusCode {
