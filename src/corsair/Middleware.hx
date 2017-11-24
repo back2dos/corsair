@@ -22,7 +22,7 @@ class Middleware {
             if (url.path == '/' && to != null) Some(to);
             else None;
         },
-        redirect: function (ctx) return 'http://${ctx.self}/?$paramName=${ctx.target}'
+        redirect: function (ctx) return 'http://${ctx.self}/?$paramName=${ctx.target}' //TODO: treat relative URLs
       });
   }
 }
