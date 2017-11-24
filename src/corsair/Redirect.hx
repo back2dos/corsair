@@ -1,3 +1,3 @@
 package corsair;
 
-typedef Redirect = { self: String, original:String, target:String } -> String;
+typedef Redirect = { self: String, original:String, from:String, to:String } -> String;
