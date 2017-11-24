@@ -1,14 +1,12 @@
 package corsair;
 
-import tink.http.Request;
-import tink.http.Response;
-import tink.http.Header;
-
-using tink.CoreApi;
-using tink.io.Source;
-
 class Forward {
-  static public function request(req:IncomingRequest, to:String, redirect) {
+
+  static public function all(base:tink.Url):Handler 
+    return function (req:IncomingRequest)
+      return Forward.request(req, base.resolve(req.header.url.pathWithQuery.substr(1)), function (ctx) return base.resolve(ctx.target));
+  
+  static public function request(req:IncomingRequest, to:String, redirect:Redirect) {
     return Promise.lift(req.header.byName(HOST))
       .next(function (host) {
         var host:String = host;
