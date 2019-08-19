@@ -14,6 +14,6 @@
   "version": "0.0.0",
   "url": "https://github.com/back2dos/corsair/",
   "dependencies": {
-    "tink_http_fetch": "gh:kevinresol/tink_http_fetch#pure"
+    "tink_http": ""
   }
 }

@@ -1,5 +1,0 @@
-# @install: lix --silent download "https://github.com/kevinresol/tink_http_fetch/archive/1ed840abb59e8f186cc7353439a331c3bf3ba453.tar.gz" into tink_http_fetch/0.2.0/github/1ed840abb59e8f186cc7353439a331c3bf3ba453
--D tink_http_fetch=0.2.0
--cp ${HAXESHIM_LIBCACHE}/tink_http_fetch/0.2.0/github/1ed840abb59e8f186cc7353439a331c3bf3ba453/src
-
--lib tink_http
