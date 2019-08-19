@@ -1,2 +1,2 @@
 -cp src
--lib tink_http_fetch
+-lib tink_http

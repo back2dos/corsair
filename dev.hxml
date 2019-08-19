@@ -1,0 +1,6 @@
+tests.hxml
+-lib corsair
+-lib travix
+-lib hxnodejs
+-js test.js
+--no-output
