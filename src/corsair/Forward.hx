@@ -20,7 +20,6 @@ class Forward {
         return tink.http.Fetch.fetch(to, {
           method: req.header.method,
           headers: [for (h in req.header) switch h.name {
-            case (_:String) => 'referer' | 'origin': continue;
             case HOST: new HeaderField(HOST, url.host.toString());
             default: h;
           }],
