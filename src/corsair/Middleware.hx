@@ -1,7 +1,7 @@
 package corsair;
 
 class Middleware {
-  static public function custom(options:{ extract: tink.Url->Option<String>, redirect:Redirect, ?modifyHeaders:Header->Array<HeaderField> }):Handler->Handler 
+  static public function custom(options:{ extract: tink.Url->Option<String>, redirect:Redirect, ?modifyHeaders:IncomingRequestHeader->Array<HeaderField> }):Handler->Handler 
     return function (handler) 
       return function (req:IncomingRequest) 
         return switch options.extract(req.header.url) {
@@ -22,7 +22,7 @@ class Middleware {
           case None: handler.process(req);
         } 
 
-  static public function create(?options:{ ?paramName:String, ?modifyHeaders:Header->Array<HeaderField> }):Handler->Handler {
+  static public function create(?options:{ ?paramName:String, ?modifyHeaders:IncomingRequestHeader->Array<HeaderField> }):Handler->Handler {
     if (options == null)
       options = {};
     var paramName = switch options.paramName {
@@ -38,7 +38,7 @@ class Middleware {
             else None;
         },
         redirect: function (ctx) {
-          return 'http://${ctx.self}/?$paramName=${(ctx.from:tink.Url).resolve(ctx.to)}'; //TODO: treat relative URLs
+          return 'http://${ctx.self}/?' + tink.url.Query.build().add(paramName, (ctx.from:tink.Url).resolve(ctx.to).toString()).toString(); //TODO: treat relative URLs
         },
         modifyHeaders: options.modifyHeaders,
       });
