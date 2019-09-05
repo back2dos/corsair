@@ -1,14 +1,22 @@
 package corsair;
 
+import tink.http.Client;
 import tink.Chunk;
 
 class Forward {
 
-  static public function all(base:tink.Url):Handler 
+  static public function all(base:tink.Url, ?augment):Handler 
     return function (req:IncomingRequest)
-      return Forward.request(req, base.resolve(req.header.url.pathWithQuery.substr(1)), function (ctx) return base.resolve(ctx.to));
+      return Forward.request(
+        req, 
+        base.resolve(req.header.url.pathWithQuery.substr(1)), 
+        { 
+          redirect: function (ctx) return base.resolve(ctx.to),
+          augment: augment,
+        }
+      );
   
-  static public function request(req:IncomingRequest, to:String, redirect:Redirect) {
+  static public function request(req:IncomingRequest, to:String, options:{ ?augment:Processors, redirect:Redirect }) {
     return Promise.lift(req.header.byName(HOST))
       .next(function (host) {
         var host:String = host;
@@ -30,6 +38,7 @@ class Forward {
               trace('received parsed body oO');
               '';
           },
+          augment: options.augment,
           followRedirect: false,
         }).next(function (res) {
 
@@ -49,7 +58,7 @@ class Forward {
                         case n: builder.add(p.name, p.value);
                       }
                     new HeaderField(SET_COOKIE, builder.toString(';'));
-                  case LOCATION: new HeaderField(LOCATION, redirect({ self: host, original: req.header.url, from: to, to: f.value }));
+                  case LOCATION: new HeaderField(LOCATION, options.redirect({ self: host, original: req.header.url, from: to, to: f.value }));
                   case CONTENT_LENGTH if (body != null): new HeaderField(CONTENT_LENGTH, body.length);
                   case REFERER: continue;
                   default: f;
@@ -66,7 +75,7 @@ class Forward {
                   .next(function (chunk) 
                     return respond([for (line in chunk.toString().split('\n'))
                       if (line.startsWith('#')) line
-                      else redirect({ self: host, original: req.header.url, from: to, to: line })
+                      else options.redirect({ self: host, original: req.header.url, from: to, to: line })
                     ].join('\n'))
                   );
               default: respond();
