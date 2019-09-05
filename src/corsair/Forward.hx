@@ -25,11 +25,24 @@ class Forward {
         if (url.host == null)
           return new Error(BadRequest, 'Missing host in URL "$to"');
 
+        var overrides = new Map<HeaderName, String>();
+        
+        for (param in req.header.url.query) 
+          switch (param.name:String).split('header.') {
+            case ['', name]: overrides[name] = param.value;
+            default: continue;
+          }
+
         return tink.http.Fetch.fetch(to, {
           method: req.header.method,
           headers: [for (h in req.header) switch h.name {
             case HOST: new HeaderField(HOST, url.host.toString());
-            default: h;
+            case name: 
+              switch overrides[name] {
+                case null: h;
+                case '': continue;
+                case value: new HeaderField(name, value);
+              }
           }],
           body: switch req.body {
             case Plain(v): 
