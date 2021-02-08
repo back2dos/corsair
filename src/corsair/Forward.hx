@@ -77,8 +77,8 @@ class Forward {
                   default: f;
                 }]
               ),
-              if (body == null) res.body.idealize(function (_) return Source.EMPTY)
-              else body
+              if (body != null) body
+              else res.body.idealize(function (_) return Source.EMPTY)
             );
                     
           return 
